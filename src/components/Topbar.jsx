@@ -1,20 +1,16 @@
-function Topbar() {
-  return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center"
-      }}
-    >
-      <h1>Mobile App</h1>
+import { Flex, Heading, Button, HStack } from "@chakra-ui/react";
 
-      <div>
-        <button>Filter</button>
-        <button style={{ marginLeft: "10px" }}>Share</button>
-      </div>
-    </div>
-  );
+function Topbar() {
+    return (
+        <Flex justify="space-between" align="center">
+            <Heading size="lg">Mobile App</Heading>
+
+            <HStack spacing="3">
+                <Button variant="outline">Filter</Button>
+                <Button colorScheme="blue">Share</Button>
+            </HStack>
+        </Flex>
+    );
 }
 
-export default Topbar
+export default Topbar;

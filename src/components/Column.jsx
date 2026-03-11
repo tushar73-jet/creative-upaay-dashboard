@@ -1,17 +1,17 @@
+import { Box, Heading } from "@chakra-ui/react";
+
 function Column({ title }) {
-  return (
-    <div
-      style={{
-        flex: 1,
-        background: "#ffffff",
-        padding: "15px",
-        borderRadius: "10px",
-        minHeight: "400px"
-      }}
-    >
-      <h3>{title}</h3>
-    </div>
-  );
+    return (
+        <Box
+            flex="1"
+            bg="white"
+            p="4"
+            borderRadius="lg"
+            minH="400px"
+        >
+            <Heading size="md" mb="4">{title}</Heading>
+        </Box>
+    );
 }
 
 export default Column;
