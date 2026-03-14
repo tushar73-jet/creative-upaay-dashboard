@@ -1,15 +1,26 @@
-import { Box, Heading } from "@chakra-ui/react";
+import { Box, Heading, VStack } from "@chakra-ui/react";
+import TaskCard from "./TaskCard";
 
-function Column({ title }) {
+function Column({ title, tasks = [] }) {
     return (
         <Box
             flex="1"
-            bg="white"
+            bg="gray.50"
             p="4"
-            borderRadius="lg"
-            minH="400px"
+            borderRadius="xl"
+            minH="500px"
+            border="1px"
+            borderColor="gray.200"
         >
-            <Heading size="md" mb="4">{title}</Heading>
+            <Heading size="sm" mb="4" color="gray.600" textTransform="uppercase">
+                {title} ({tasks.length})
+            </Heading>
+            
+            <VStack align="stretch" spacing="2">
+                {tasks.map(task => (
+                    <TaskCard key={task.id} task={task} />
+                ))}
+            </VStack>
         </Box>
     );
 }

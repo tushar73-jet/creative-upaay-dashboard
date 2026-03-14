@@ -1,24 +1,26 @@
 import { Flex, Box } from "@chakra-ui/react";
+import { useSelector } from "react-redux";
 import Sidebar from "../components/Sidebar"
 import Topbar from "../components/Topbar"
 import Column from "../components/Column"
 
 function Dashboard() {
-    return (
-        <Flex h="100vh">
+    const tasks = useSelector((state) => state.tasks.tasks);
 
+    const filterTasks = (status) => tasks.filter(task => task.status === status);
+
+    return (
+        <Flex h="100vh" bg="gray.100">
             <Sidebar />
 
-            <Box flex="1" p="5" bg="gray.50">
-
+            <Box flex="1" p="8" overflowY="auto">
                 <Topbar />
 
-                <Flex gap="5" mt="5">
-                    <Column title="To Do" />
-                    <Column title="In Progress" />
-                    <Column title="Done" />
+                <Flex gap="6" mt="8" align="flex-start">
+                    <Column title="To Do" tasks={filterTasks('To Do')} />
+                    <Column title="In Progress" tasks={filterTasks('In Progress')} />
+                    <Column title="Done" tasks={filterTasks('Done')} />
                 </Flex>
-
             </Box>
         </Flex>
     );
