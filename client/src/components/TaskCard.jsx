@@ -124,7 +124,20 @@ function TaskCard({ task }) {
               onClick={(e) => e.stopPropagation()}
             />
             <MenuList onClick={(e) => e.stopPropagation()}>
-              <MenuItem onClick={() => dispatch(deleteTask(task.id))} color="red.500">Delete</MenuItem>
+              <Text px="3" py="1" fontSize="xs" color="gray.500" fontWeight="bold">MOVE TO</Text>
+              {['To Do', 'In Progress', 'Done'].filter(s => s !== task.status).map(status => (
+                <MenuItem
+                  key={status}
+                  fontSize="sm"
+                  onClick={() => dispatch(updateTaskStatus({ id: task.id, newStatus: status }))}
+                >
+                  {status}
+                </MenuItem>
+              ))}
+              <Divider my={1} />
+              <MenuItem onClick={() => dispatch(deleteTask(task.id))} color="red.500" fontSize="sm">
+                Delete Task
+              </MenuItem>
             </MenuList>
           </Menu>
         </HStack>
