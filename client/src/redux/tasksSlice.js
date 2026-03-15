@@ -2,9 +2,9 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
   tasks: [
-    { id: '1', title: 'Brainstorm Features', description: 'List out all required app features', status: 'To Do', priority: 'High' },
-    { id: '2', title: 'Design Database', description: 'Create ERD diagrams', status: 'In Progress', priority: 'Medium' },
-    { id: '3', title: 'Setup UI', description: 'Install Chakra UI', status: 'Done', priority: 'High' },
+    { id: '1', title: 'Brainstorm Features', description: 'List out all required app features', status: 'To Do', priority: 'High', dueDate: '2024-01-15', reminder: true },
+    { id: '2', title: 'Design Database', description: 'Create ERD diagrams', status: 'In Progress', priority: 'Medium', dueDate: '2025-12-01', reminder: false },
+    { id: '3', title: 'Setup UI', description: 'Install Chakra UI', status: 'Done', priority: 'High', dueDate: '2025-06-20', reminder: true },
   ]
 };
 

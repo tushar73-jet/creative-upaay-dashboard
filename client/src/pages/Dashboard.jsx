@@ -1,10 +1,11 @@
 import { 
     Flex, 
     Box, 
-    useDisclosure 
+    useDisclosure,
+    useToast
 } from "@chakra-ui/react";
 import { useSelector, useDispatch } from "react-redux";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
     DndContext, 
     closestCorners,
@@ -24,11 +25,35 @@ function Dashboard() {
     const [priorityFilter, setPriorityFilter] = useState("All");
     const [activeColumn, setActiveColumn] = useState("To Do");
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const toast = useToast();
+
+    useEffect(() => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        tasks.forEach(task => {
+            if (task.reminder && task.status !== 'Done' && task.dueDate) {
+                const dueDate = new Date(task.dueDate);
+                if (dueDate <= today) {
+                    const isOverdue = dueDate < today;
+                    toast({
+                        title: isOverdue ? "Action Required: Overdue Task" : "Reminder: Task Due Today",
+                        description: `"${task.title}" is ${isOverdue ? 'past' : 'at'} its deadline.`,
+                        status: isOverdue ? "error" : "warning",
+                        duration: 6000,
+                        isClosable: true,
+                        position: "top-right",
+                        variant: "subtle"
+                    });
+                }
+            }
+        });
+    }, [tasks.length]); 
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
-                distance: 5, // 5px movement required to start dragging
+                distance: 5,
             },
         })
     );
@@ -63,9 +88,9 @@ function Dashboard() {
                     onAddTask={() => { setActiveColumn("To Do"); onOpen(); }}
                 />
 
-                <DndContext 
+                <DndContext
                     sensors={sensors}
-                    collisionDetection={closestCorners} 
+                    collisionDetection={closestCorners}
                     onDragEnd={handleDragEnd}
                 >
                     <Flex gap="6" mt="8" align="flex-start">
