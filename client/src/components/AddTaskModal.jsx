@@ -41,12 +41,12 @@ function AddTaskModal({ isOpen, onClose, defaultStatus = "To Do" }) {
             priority,
             status: defaultStatus,
             dueDate,
-            reminder
+            reminder,
+            subtasks: []
         };
 
         dispatch(addTask(newTask));
 
-        // Reset and close
         setTitle("");
         setDescription("");
         setPriority("Low");
@@ -84,7 +84,7 @@ function AddTaskModal({ isOpen, onClose, defaultStatus = "To Do" }) {
                         <HStack w="full" spacing={4}>
                             <FormControl flex="1">
                                 <FormLabel>Priority</FormLabel>
-                                <Select 
+                                <Select
                                     value={priority}
                                     onChange={(e) => setPriority(e.target.value)}
                                 >
@@ -96,7 +96,7 @@ function AddTaskModal({ isOpen, onClose, defaultStatus = "To Do" }) {
 
                             <FormControl flex="1">
                                 <FormLabel>Due Date</FormLabel>
-                                <Input 
+                                <Input
                                     type="date"
                                     value={dueDate}
                                     onChange={(e) => setDueDate(e.target.value)}
@@ -109,9 +109,9 @@ function AddTaskModal({ isOpen, onClose, defaultStatus = "To Do" }) {
                             <FormLabel mb="0" fontSize="sm" fontWeight="medium">
                                 Enable Reminder for this task?
                             </FormLabel>
-                            <Switch 
-                                isChecked={reminder} 
-                                onChange={(e) => setReminder(e.target.checked)} 
+                            <Switch
+                                isChecked={reminder}
+                                onChange={(e) => setReminder(e.target.checked)}
                                 colorScheme="purple"
                                 ml="auto"
                             />

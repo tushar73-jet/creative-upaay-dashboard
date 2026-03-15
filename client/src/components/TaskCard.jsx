@@ -15,9 +15,12 @@ import {
 } from "@chakra-ui/react";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import { MoreVertical, Calendar, Bell, AlertCircle } from "lucide-react";
+import { MoreVertical, Calendar, Bell, AlertCircle, History } from "lucide-react";
 import { useDispatch } from "react-redux";
-import { updateTaskStatus, deleteTask } from "../redux/tasksSlice";
+import { updateTaskStatus, deleteTask, toggleSubtask, addSubtask } from "../redux/tasksSlice";
+import { Checkbox, Input, Collapse, useDisclosure as useChakraDisclosure } from "@chakra-ui/react";
+import { useState } from "react";
+import { v4 as uuidv4 } from 'uuid';
 
 function TaskCard({ task }) {
     const dispatch = useDispatch();
@@ -51,6 +54,19 @@ function TaskCard({ task }) {
     };
 
     const nextStatuses = ['To Do', 'In Progress', 'Done'].filter(s => s !== task.status);
+
+    const [newSubtask, setNewSubtask] = useState("");
+    const { isOpen: isLogOpen, onToggle: onToggleLog } = useChakraDisclosure();
+
+    const handleAddSubtask = (e) => {
+        if (e.key === 'Enter' && newSubtask.trim()) {
+            dispatch(addSubtask({
+                taskId: task.id,
+                subtask: { id: uuidv4(), title: newSubtask.trim(), completed: false }
+            }));
+            setNewSubtask("");
+        }
+    };
 
     return (
         <Box
@@ -116,9 +132,75 @@ function TaskCard({ task }) {
                     <Text fontWeight="600" fontSize="md" color="gray.800" noOfLines={1} mb={1}>
                         {task.title}
                     </Text>
-                    <Text fontSize="xs" color="gray.500" noOfLines={2}>
+                    <Text fontSize="xs" color="gray.500" noOfLines={2} mb={3}>
                         {task.description}
                     </Text>
+
+                    {task.subtasks?.length > 0 && (
+                        <VStack align="stretch" spacing={2} mb={3} onClick={(e) => e.stopPropagation()}>
+                            {task.subtasks.map(sub => (
+                                <Checkbox 
+                                    key={sub.id} 
+                                    size="sm" 
+                                    isChecked={sub.completed}
+                                    onChange={() => dispatch(toggleSubtask({ taskId: task.id, subtaskId: sub.id }))}
+                                >
+                                    <Text fontSize="xs" as={sub.completed ? "s" : "span"} color={sub.completed ? "gray.400" : "gray.700"}>
+                                        {sub.title}
+                                    </Text>
+                                </Checkbox>
+                            ))}
+                        </VStack>
+                    )}
+
+                    <Input 
+                        placeholder="Add subtask..." 
+                        size="xs" 
+                        variant="flushed"
+                        value={newSubtask}
+                        onChange={(e) => setNewSubtask(e.target.value)}
+                        onKeyDown={handleAddSubtask}
+                        onClick={(e) => e.stopPropagation()}
+                    />
+
+                    <HStack 
+                        mt={4}
+                        pt={2}
+                        borderTop="1px dashed"
+                        borderColor="gray.100"
+                        justify="space-between" 
+                        align="center" 
+                        cursor="pointer" 
+                        onClick={(e) => { e.stopPropagation(); onToggleLog(); }}
+                        _hover={{ opacity: 0.7 }}
+                    >
+                        <HStack spacing={2} color="blue.500">
+                            <History size={14} />
+                            <Text fontSize="xs" fontWeight="bold">View Activity Log</Text>
+                        </HStack>
+                        <Text fontSize="2xs" color="gray.400">
+                            {task.activityLog?.length || 0} events
+                        </Text>
+                    </HStack>
+
+                    <Collapse in={isLogOpen} animateOpacity>
+                        <VStack align="stretch" spacing={2} onClick={(e) => e.stopPropagation()}>
+                            {task.activityLog?.length > 0 ? (
+                                task.activityLog.map(log => (
+                                    <Box key={log.id} borderLeft="2px" borderColor="blue.200" pl={3} py={1}>
+                                        <Text fontSize="2xs" color="gray.400">
+                                            {new Date(log.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        </Text>
+                                        <Text fontSize="xs" color="gray.600" lineHeight="tight">
+                                            {log.action}
+                                        </Text>
+                                    </Box>
+                                ))
+                            ) : (
+                                <Text fontSize="xs" color="gray.400">No activity logged yet.</Text>
+                            )}
+                        </VStack>
+                    </Collapse>
                 </Box>
 
                 {task.dueDate && (
