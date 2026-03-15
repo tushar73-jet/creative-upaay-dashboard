@@ -1,13 +1,13 @@
-import { 
-    Flex, 
-    Box, 
+import {
+    Flex,
+    Box,
     useDisclosure,
     useToast
 } from "@chakra-ui/react";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
-import { 
-    DndContext, 
+import {
+    DndContext,
     closestCorners,
     useSensor,
     useSensors,
@@ -48,7 +48,7 @@ function Dashboard() {
                 }
             }
         });
-    }, [tasks.length]); 
+    }, [tasks.length]);
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -78,10 +78,10 @@ function Dashboard() {
     };
 
     return (
-        <Flex h="100vh" bg="gray.100">
+        <Flex h="100vh" bg="white">
             <Sidebar />
 
-            <Box flex="1" p="8" overflowY="auto">
+            <Box flex="1" px="10" py="8" overflowY="auto" bg="white">
                 <Topbar
                     priorityFilter={priorityFilter}
                     setFilterPriority={setPriorityFilter}
@@ -93,7 +93,7 @@ function Dashboard() {
                     collisionDetection={closestCorners}
                     onDragEnd={handleDragEnd}
                 >
-                    <Flex gap="6" mt="8" align="flex-start">
+                    <Flex gap="6" mt="8" align="flex-start" pb="12">
                         <Column
                             id="To Do"
                             title="To Do"
@@ -121,4 +121,4 @@ function Dashboard() {
     );
 }
 
-export default Dashboard
+export default Dashboard;
