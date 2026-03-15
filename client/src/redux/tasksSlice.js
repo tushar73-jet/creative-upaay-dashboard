@@ -1,26 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  tasks: [
-    { 
-      id: '1', 
-      title: 'Brainstorm Features', 
-      description: 'List out all required app features', 
-      status: 'To Do', 
-      priority: 'High', 
-      dueDate: '2024-01-15', 
-      reminder: true,
-      subtasks: [
-        { id: 's1', title: 'Create routes', completed: false },
-        { id: 's2', title: 'Write controllers', completed: true }
-      ],
-      activityLog: [
-        { id: 'a1', action: 'Task created', time: new Date().toISOString() }
-      ]
-    },
-    { id: '2', title: 'Design Database', description: 'Create ERD diagrams', status: 'In Progress', priority: 'Medium', dueDate: '2025-12-01', reminder: false, subtasks: [], activityLog: [] },
-    { id: '3', title: 'Setup UI', description: 'Install Chakra UI', status: 'Done', priority: 'High', dueDate: '2025-06-20', reminder: true, subtasks: [], activityLog: [] },
-  ]
+  tasks: []
 };
 
 const tasksSlice = createSlice({
