@@ -12,7 +12,6 @@ import {
     Input,
     Textarea,
     Select,
-    useDisclosure,
     VStack
 } from "@chakra-ui/react";
 import { useState } from "react";
@@ -20,7 +19,7 @@ import { useDispatch } from "react-redux";
 import { addTask } from "../redux/tasksSlice";
 import { v4 as uuidv4 } from 'uuid';
 
-function AddTaskModal({ isOpen, onClose }) {
+function AddTaskModal({ isOpen, onClose, defaultStatus = "To Do" }) {
     const dispatch = useDispatch();
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -34,7 +33,7 @@ function AddTaskModal({ isOpen, onClose }) {
             title,
             description,
             priority,
-            status: "To Do"
+            status: defaultStatus
         };
 
         dispatch(addTask(newTask));

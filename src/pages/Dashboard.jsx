@@ -1,4 +1,4 @@
-import { Flex, Box } from "@chakra-ui/react";
+import { Flex, Box, useDisclosure } from "@chakra-ui/react";
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 import { DndContext, closestCorners } from "@dnd-kit/core";
@@ -6,11 +6,14 @@ import { updateTaskStatus } from "../redux/tasksSlice";
 import Sidebar from "../components/Sidebar"
 import Topbar from "../components/Topbar"
 import Column from "../components/Column"
+import AddTaskModal from "../components/AddTaskModal";
 
 function Dashboard() {
     const dispatch = useDispatch();
     const tasks = useSelector((state) => state.tasks.tasks);
     const [priorityFilter, setPriorityFilter] = useState("All");
+    const [activeColumn, setActiveColumn] = useState("To Do");
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     const filterTasks = (status) => {
         return tasks.filter(task => {
@@ -36,16 +39,37 @@ function Dashboard() {
             <Sidebar />
 
             <Box flex="1" p="8" overflowY="auto">
-                <Topbar priorityFilter={priorityFilter} setPriorityFilter={setPriorityFilter} />
+                <Topbar 
+                    priorityFilter={priorityFilter} 
+                    setFilterPriority={setPriorityFilter} 
+                    onAddTask={() => { setActiveColumn("To Do"); onOpen(); }}
+                />
 
                 <DndContext collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
                     <Flex gap="6" mt="8" align="flex-start">
-                        <Column id="To Do" title="To Do" tasks={filterTasks('To Do')} />
-                        <Column id="In Progress" title="In Progress" tasks={filterTasks('In Progress')} />
-                        <Column id="Done" title="Done" tasks={filterTasks('Done')} />
+                        <Column 
+                            id="To Do" 
+                            title="To Do" 
+                            tasks={filterTasks('To Do')} 
+                            onAddTask={(col) => { setActiveColumn(col); onOpen(); }}
+                        />
+                        <Column 
+                            id="In Progress" 
+                            title="In Progress" 
+                            tasks={filterTasks('In Progress')} 
+                            onAddTask={(col) => { setActiveColumn(col); onOpen(); }}
+                        />
+                        <Column 
+                            id="Done" 
+                            title="Done" 
+                            tasks={filterTasks('Done')} 
+                            onAddTask={(col) => { setActiveColumn(col); onOpen(); }}
+                        />
                     </Flex>
                 </DndContext>
             </Box>
+            
+            <AddTaskModal isOpen={isOpen} onClose={onClose} defaultStatus={activeColumn} />
         </Flex>
     );
 }

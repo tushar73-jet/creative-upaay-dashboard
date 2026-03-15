@@ -1,9 +1,6 @@
-import { Flex, Heading, Button, HStack, useDisclosure, Select } from "@chakra-ui/react";
-import AddTaskModal from "./AddTaskModal";
+import { Flex, Heading, Button, HStack, Select } from "@chakra-ui/react";
 
-function Topbar({ priorityFilter, setPriorityFilter }) {
-    const { isOpen, onOpen, onClose } = useDisclosure();
-
+function Topbar({ priorityFilter, setFilterPriority, onAddTask }) {
     return (
         <Flex justify="space-between" align="center">
             <Heading size="lg" fontWeight="extrabold">Mobile App</Heading>
@@ -13,7 +10,7 @@ function Topbar({ priorityFilter, setPriorityFilter }) {
                     size="sm" 
                     w="150px" 
                     value={priorityFilter} 
-                    onChange={(e) => setPriorityFilter(e.target.value)}
+                    onChange={(e) => setFilterPriority(e.target.value)}
                     bg="white"
                 >
                     <option value="All">All Priorities</option>
@@ -21,11 +18,9 @@ function Topbar({ priorityFilter, setPriorityFilter }) {
                     <option value="Medium">Medium</option>
                     <option value="Low">Low</option>
                 </Select>
-                <Button colorScheme="blue" size="sm" onClick={onOpen}>+ Add Task</Button>
+                <Button colorScheme="blue" size="sm" onClick={onAddTask}>+ Add Task</Button>
                 <Button colorScheme="gray" variant="ghost" size="sm">Share</Button>
             </HStack>
-
-            <AddTaskModal isOpen={isOpen} onClose={onClose} />
         </Flex>
     );
 }

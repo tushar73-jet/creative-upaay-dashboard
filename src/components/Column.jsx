@@ -1,8 +1,8 @@
-import { Box, Heading, VStack } from "@chakra-ui/react";
+import { Box, Heading, VStack, Button } from "@chakra-ui/react";
 import { useDroppable } from "@dnd-kit/core";
 import TaskCard from "./TaskCard";
 
-function Column({ id, title, tasks = [] }) {
+function Column({ id, title, tasks = [], onAddTask }) {
     const { setNodeRef } = useDroppable({
         id: id,
     });
@@ -27,6 +27,18 @@ function Column({ id, title, tasks = [] }) {
                     <TaskCard key={task.id} task={task} />
                 ))}
             </VStack>
+
+            <Button 
+                mt="4" 
+                size="sm" 
+                variant="ghost" 
+                w="full" 
+                color="gray.500"
+                leftIcon={<span style={{fontSize:"16px"}}>+</span>}
+                onClick={() => onAddTask && onAddTask(title)}
+            >
+                Add task
+            </Button>
         </Box>
     );
 }
