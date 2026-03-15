@@ -10,12 +10,21 @@ import {
     MenuItem, 
     IconButton 
 } from "@chakra-ui/react";
+import { useDraggable } from "@dnd-kit/core";
+import { CSS } from "@dnd-kit/utilities";
 import { MoreVertical } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { updateTaskStatus, deleteTask } from "../redux/tasksSlice";
 
 function TaskCard({ task }) {
     const dispatch = useDispatch();
+    const { attributes, listeners, setNodeRef, transform } = useDraggable({
+        id: task.id,
+    });
+
+    const style = {
+        transform: CSS.Translate.toString(transform),
+    };
 
     const getPriorityColor = (priority) => {
         switch (priority?.toLowerCase()) {
@@ -30,6 +39,10 @@ function TaskCard({ task }) {
 
     return (
         <Box
+            ref={setNodeRef}
+            style={style}
+            {...listeners}
+            {...attributes}
             p="4"
             bg="white"
             borderRadius="md"
@@ -38,6 +51,7 @@ function TaskCard({ task }) {
             borderColor="gray.100"
             mb="3"
             _hover={{ boxShadow: "md" }}
+            cursor="grab"
         >
             <VStack align="stretch" spacing="2">
                 <HStack justify="space-between" align="start">
@@ -52,8 +66,9 @@ function TaskCard({ task }) {
                             icon={<MoreVertical size={16} />}
                             variant="ghost"
                             size="xs"
+                            onClick={(e) => e.stopPropagation()} // Prevent drag start when clicking menu
                         />
-                        <MenuList>
+                        <MenuList onClick={(e) => e.stopPropagation()}>
                             <Text px="3" py="1" fontSize="xs" color="gray.500" fontWeight="bold">MOVE TO</Text>
                             {nextStatuses.map(status => (
                                 <MenuItem 

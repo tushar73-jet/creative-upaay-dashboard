@@ -1,9 +1,15 @@
 import { Box, Heading, VStack } from "@chakra-ui/react";
+import { useDroppable } from "@dnd-kit/core";
 import TaskCard from "./TaskCard";
 
-function Column({ title, tasks = [] }) {
+function Column({ id, title, tasks = [] }) {
+    const { setNodeRef } = useDroppable({
+        id: id,
+    });
+
     return (
         <Box
+            ref={setNodeRef}
             flex="1"
             bg="gray.50"
             p="4"
