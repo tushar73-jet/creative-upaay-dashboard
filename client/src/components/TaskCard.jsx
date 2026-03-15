@@ -29,7 +29,8 @@ import {
   MessageSquare, 
   FileText,
   History,
-  AlertCircle
+  AlertCircle,
+  Bell
 } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { updateTaskStatus, deleteTask, toggleSubtask, addSubtask } from "../redux/tasksSlice";
@@ -99,19 +100,24 @@ function TaskCard({ task }) {
     >
       <VStack align="stretch" spacing={3}>
         <HStack justify="space-between" align="center">
-          <Badge 
-            variant="subtle" 
-            px={2} 
-            py={0.5} 
-            borderRadius="md" 
-            bg={prioStyle.bg} 
-            color={prioStyle.color}
-            fontSize="2xs"
-            fontWeight="bold"
-            textTransform="capitalize"
-          >
-            {prioStyle.label}
-          </Badge>
+          <HStack spacing={2}>
+            {task.reminder && (
+              <Icon as={Bell} size={12} color="orange.400" />
+            )}
+            <Badge 
+              variant="subtle" 
+              px={2} 
+              py={0.5} 
+              borderRadius="md" 
+              bg={prioStyle.bg} 
+              color={prioStyle.color}
+              fontSize="2xs"
+              fontWeight="bold"
+              textTransform="capitalize"
+            >
+              {prioStyle.label}
+            </Badge>
+          </HStack>
 
           <Menu size="sm">
             <MenuButton
@@ -226,7 +232,7 @@ function TaskCard({ task }) {
             </HStack>
             {task.dueDate && (
               <HStack spacing={1} color={overdue ? "red.500" : "gray.400"}>
-                <Icon as={overdue ? AlertCircle : Calendar} size={12} />
+                <Icon as={overdue ? AlertCircle : (task.reminder ? Bell : Calendar)} size={12} />
                 <Text fontSize="xs" fontWeight="700">
                   {new Date(task.dueDate).toLocaleDateString()}
                 </Text>
