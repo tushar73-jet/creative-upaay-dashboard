@@ -1,7 +1,17 @@
-import { Flex, Box, useDisclosure } from "@chakra-ui/react";
+import { 
+    Flex, 
+    Box, 
+    useDisclosure 
+} from "@chakra-ui/react";
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
-import { DndContext, closestCorners } from "@dnd-kit/core";
+import { 
+    DndContext, 
+    closestCorners,
+    useSensor,
+    useSensors,
+    PointerSensor
+} from "@dnd-kit/core";
 import { updateTaskStatus } from "../redux/tasksSlice";
 import Sidebar from "../components/Sidebar"
 import Topbar from "../components/Topbar"
@@ -15,6 +25,14 @@ function Dashboard() {
     const [activeColumn, setActiveColumn] = useState("To Do");
     const { isOpen, onOpen, onClose } = useDisclosure();
 
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 5, // 5px movement required to start dragging
+            },
+        })
+    );
+
     const filterTasks = (status) => {
         return tasks.filter(task => {
             const matchesStatus = task.status === status;
@@ -25,11 +43,11 @@ function Dashboard() {
 
     const handleDragEnd = (event) => {
         const { active, over } = event;
-        
+
         if (over && active.id !== over.id) {
             const taskId = active.id;
             const newStatus = over.id; // The column ID is the status
-            
+
             dispatch(updateTaskStatus({ id: taskId, newStatus }));
         }
     };
@@ -39,36 +57,40 @@ function Dashboard() {
             <Sidebar />
 
             <Box flex="1" p="8" overflowY="auto">
-                <Topbar 
-                    priorityFilter={priorityFilter} 
-                    setFilterPriority={setPriorityFilter} 
+                <Topbar
+                    priorityFilter={priorityFilter}
+                    setFilterPriority={setPriorityFilter}
                     onAddTask={() => { setActiveColumn("To Do"); onOpen(); }}
                 />
 
-                <DndContext collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
+                <DndContext 
+                    sensors={sensors}
+                    collisionDetection={closestCorners} 
+                    onDragEnd={handleDragEnd}
+                >
                     <Flex gap="6" mt="8" align="flex-start">
-                        <Column 
-                            id="To Do" 
-                            title="To Do" 
-                            tasks={filterTasks('To Do')} 
+                        <Column
+                            id="To Do"
+                            title="To Do"
+                            tasks={filterTasks('To Do')}
                             onAddTask={(col) => { setActiveColumn(col); onOpen(); }}
                         />
-                        <Column 
-                            id="In Progress" 
-                            title="In Progress" 
-                            tasks={filterTasks('In Progress')} 
+                        <Column
+                            id="In Progress"
+                            title="In Progress"
+                            tasks={filterTasks('In Progress')}
                             onAddTask={(col) => { setActiveColumn(col); onOpen(); }}
                         />
-                        <Column 
-                            id="Done" 
-                            title="Done" 
-                            tasks={filterTasks('Done')} 
+                        <Column
+                            id="Done"
+                            title="Done"
+                            tasks={filterTasks('Done')}
                             onAddTask={(col) => { setActiveColumn(col); onOpen(); }}
                         />
                     </Flex>
                 </DndContext>
             </Box>
-            
+
             <AddTaskModal isOpen={isOpen} onClose={onClose} defaultStatus={activeColumn} />
         </Flex>
     );

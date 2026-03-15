@@ -1,14 +1,14 @@
-import { 
-    Box, 
-    Text, 
-    Badge, 
-    VStack, 
-    HStack, 
-    Menu, 
-    MenuButton, 
-    MenuList, 
-    MenuItem, 
-    IconButton 
+import {
+    Box,
+    Text,
+    Badge,
+    VStack,
+    HStack,
+    Menu,
+    MenuButton,
+    MenuList,
+    MenuItem,
+    IconButton
 } from "@chakra-ui/react";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
@@ -58,7 +58,7 @@ function TaskCard({ task }) {
                     <Badge w="fit-content" colorScheme={getPriorityColor(task.priority)}>
                         {task.priority || 'Low'}
                     </Badge>
-                    
+
                     <Menu size="sm">
                         <MenuButton
                             as={IconButton}
@@ -71,16 +71,16 @@ function TaskCard({ task }) {
                         <MenuList onClick={(e) => e.stopPropagation()}>
                             <Text px="3" py="1" fontSize="xs" color="gray.500" fontWeight="bold">MOVE TO</Text>
                             {nextStatuses.map(status => (
-                                <MenuItem 
-                                    key={status} 
+                                <MenuItem
+                                    key={status}
                                     fontSize="sm"
                                     onClick={() => dispatch(updateTaskStatus({ id: task.id, newStatus: status }))}
                                 >
                                     {status}
                                 </MenuItem>
                             ))}
-                            <MenuItem 
-                                color="red.500" 
+                            <MenuItem
+                                color="red.500"
                                 fontSize="sm"
                                 onClick={() => dispatch(deleteTask(task.id))}
                             >
