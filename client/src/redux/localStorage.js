@@ -1,6 +1,6 @@
 export const loadState = () => {
   try {
-    const serializedState = localStorage.getItem('dashboardState')
+    const serializedState = localStorage.getItem('dashboardState_v1')
     if (serializedState === null) {
       return undefined
     }
@@ -13,7 +13,7 @@ export const loadState = () => {
 export const saveState = (state) => {
   try {
     const serializedState = JSON.stringify(state)
-    localStorage.setItem('dashboardState', serializedState)
+    localStorage.setItem('dashboardState_v1', serializedState)
   } catch {
   }
 };
